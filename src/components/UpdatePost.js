@@ -1,34 +1,32 @@
 import React,{useEffect, useState} from 'react';
-import { Button, Form, Modal} from 'semantic-ui-react';
-import {CREATE_POST_MUTATION} from '../utils/graphql.js' 
+import { Button, Form, Modal,Icon} from 'semantic-ui-react';
+import {UPDATE_POST_MUTATION} from '../utils/graphql.js' 
 import { useMutation } from '@apollo/react-hooks';
 import {sortingOptions2} from '../utils/sorting.js';
 
 import { useForm } from '../hooks/useForm.js';
 
-const PostForm = ({refetch}) => {
+const PostForm = ({refetch, postId}) => {
   const [visiblity, setVisibility] = useState();
   const [open, setOpen] = useState(false)
   const [error, setError] = useState('');
-  const { values, onChange, onSubmit } = useForm(createPostCallback, {
+  const { values, onChange, onSubmit } = useForm(updatePostCallback, {
     title: '',
     description: '',
-    body: '',
-    hidden: visiblity
   });
 
-  const [createPost, { loading }] = useMutation(CREATE_POST_MUTATION, {
-    variables: {
-    title: values.title,
-    description: values.description,
-    body: values.body,
-    hidden: visiblity
+  const [updatePost, { loading }] = useMutation(UPDATE_POST_MUTATION, {
+    variables:{
+      postId: postId,
+      title: values.title,
+      description: values.description,
+      hidden: visiblity,
     },
     onCompleted(){
-      refetch();
       values.title = "";
       values.description = "";
       values.body = "";
+      refetch();
       setOpen(false);
     },
     onError(err) {
@@ -47,13 +45,13 @@ const PostForm = ({refetch}) => {
     },
   });
 
-  function createPostCallback () {  
-    createPost(); 
+  function updatePostCallback () {  
+    updatePost(); 
   }
 
   useEffect(()=> {
 
-  },[createPost])
+  },[updatePost])
 
   return (
     <>
@@ -61,12 +59,19 @@ const PostForm = ({refetch}) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={<Button>New Post</Button>}
+      trigger={ <Button
+        as="div"
+        color="yellow"
+        floated="right"
+      >
+        <Icon name="edit" style={{ margin: 0 }} />
+      </Button>
+      }
     >
       <Modal.Content>
       <div>    
       <Form onSubmit={onSubmit} className={loading ? 'loading' : ''}>
-        <h2>Create a post:</h2>
+        <h2>update post:</h2>
         <Form.Field>
           <Form.Input
             placeholder="title"
@@ -81,13 +86,6 @@ const PostForm = ({refetch}) => {
            placeholder='public' options={sortingOptions2} 
            />
 
-          <Form.TextArea
-            placeholder="code here.."
-            required
-            name="body"
-            onChange={onChange}
-            value={values.body}
-          />
           <Form.TextArea
             placeholder="description"
             name="description"

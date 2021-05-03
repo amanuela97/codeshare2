@@ -26,14 +26,13 @@ const  Login = (props) => {
     },
     onError(err) {
       try {
-        if(err.graphQLErrors[0].extensions[0]) {
-          setError(err.graphQLErrors[0].extensions[0].message);
-        } else {
-          setError(err.graphQLErrors[0].message);
-        }
+        if(err) {
+          const errors = err.graphQLErrors.map(error => error.message);
+          setError(errors)
+        } 
       } catch (error) {
-        console.log(error);
-      }  
+            console.log(error);
+      }   
     },
     variables: values
   });

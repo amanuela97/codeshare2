@@ -7,7 +7,6 @@ import {REGISTER_USER} from '../utils/graphql.js'
 
 function Register(props) {
   const context = useContext(AuthContext);
-  const [errorKey, setErrorKey] = useState({value: ''});
   const [error, setError] = useState();
 
   const { onChange, onSubmit, values } = useForm(registerUser, {
@@ -29,15 +28,14 @@ function Register(props) {
     },
     onError(err) {
       try {
-        if(err.graphQLErrors[0].extensions[0]) {
-          setErrorKey({value: err.graphQLErrors[0].extensions[0].context.key});
-          setError(err.graphQLErrors[0].extensions[0].message);
-        }else{
-          setError(err.graphQLErrors[0].message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+        if(err) {
+          const errors = err.graphQLErrors.map(error => error.message);
+          setError(errors)
+          console.log(errors);
+        } 
+    } catch (error) {
+          console.log(error);
+    } 
     },
     variables: values
   });
@@ -56,7 +54,6 @@ function Register(props) {
           name="username"
           type="text"
           value={values.username}
-          error={errorKey.value === "username" ? true : false}
           onChange={onChange}
         />
         <Form.Input
@@ -65,7 +62,6 @@ function Register(props) {
           name="email"
           type="email"
           value={values.email}
-          error={errorKey.value === "email" ? true : false}
           onChange={onChange}
         />
         <Form.Input
@@ -74,7 +70,6 @@ function Register(props) {
           name="password"
           type="password"
           value={values.password}
-          error={errorKey.value === "password" ? true : false}
           onChange={onChange}
         />
         <Form.Input
@@ -83,7 +78,6 @@ function Register(props) {
           name="confirmPassword"
           type="password"
           value={values.confirmPassword}
-          error={errorKey.value === "confirmPassword" ? true : false}
           onChange={onChange}
         />
         <Button type="submit" primary>

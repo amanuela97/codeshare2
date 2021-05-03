@@ -5,6 +5,8 @@ import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat.js';
+import PostItem from './pages/postItem.js'
+import Join from './pages/Join.js'
 import {Container} from 'semantic-ui-react';
 import {AuthProvider} from './context/auth.js';
 import AuthRoute from './utils/AuthRoute.js';
@@ -21,6 +23,8 @@ const App = () =>  {
             <AuthRoute exact path='/' component={Home} />
             <AuthRoute  exact path='/profile' component={Profile} />
             <AuthRoute  exact path='/chat' component={Chat} />
+            <AuthRoute exact path='/join' component={Join} />
+            <AuthRoute  exact path='/posts/:postId' component={PostItem} />
           </Switch>
         </Container>  
       </Router>

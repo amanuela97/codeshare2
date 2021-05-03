@@ -28,15 +28,7 @@ const NavBar = () => {
         onClick={handleItemClick} 
         as={Link} 
         to="/profile" 
-      />
-      
-      <Menu.Item
-        name='chat'
-        active={activeItem === 'chat'}
-        onClick={handleItemClick}
-        as={Link}
-        to="/chat"
-      />
+      />  
 
       <Menu.Menu position="right">
         <Menu.Item name="logout" onClick={logout} />
